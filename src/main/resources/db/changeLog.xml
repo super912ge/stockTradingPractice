@@ -1,0 +1,174 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="create-user-sequence" author="yg">
+        <createSequence
+                sequenceName="stock_user_seq"
+                startValue="1"
+                incrementBy="1"
+                minValue="1"
+                maxValue="100000000"
+                ordered="true"
+                cycle="false"/>
+    </changeSet>
+
+
+    <changeSet id="create-account-transaction-sequence" author="yg">
+        <createSequence
+                sequenceName="account_transaction_seq"
+                startValue="1"
+                incrementBy="1"
+                minValue="1"
+                maxValue="100000000"
+                ordered="true"
+                cycle="false"/>
+    </changeSet>
+
+    <changeSet id="create-stock-sequence" author="yg">
+        <createSequence
+                sequenceName="stock_seq"
+                startValue="1"
+                incrementBy="1"
+                minValue="1"
+                maxValue="100000000"
+                ordered="true"
+                cycle="false"/>
+    </changeSet>
+
+    <changeSet id="create-account-sequence" author="yg">
+        <createSequence
+                sequenceName="account_seq"
+                startValue="1"
+                incrementBy="1"
+                minValue="1"
+                maxValue="100000000"
+                ordered="true"
+                cycle="false"/>
+    </changeSet>
+
+    <changeSet id="create-portfolio-sequence" author="yg">
+        <createSequence
+                sequenceName="portfolio_seq"
+                startValue="1"
+                incrementBy="1"
+                minValue="1"
+                maxValue="100000000"
+                ordered="true"
+                cycle="false"/>
+    </changeSet>
+    <changeSet id="create-stock-holding-sequence" author="yg">
+        <createSequence
+                sequenceName="stock_holding_seq"
+                startValue="1"
+                incrementBy="1"
+                minValue="1"
+                maxValue="100000000"
+                ordered="true"
+                cycle="false"/>
+    </changeSet>
+
+    <changeSet author="yg" id="create-user-table">
+        <createTable tableName="Stock_User">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="stock_user_seq">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="PASSWORD" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yg" id="create-stock-table">
+        <createTable tableName="Stock">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="stock_seq">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="symbol" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yg" id="create-stock-holding-table">
+        <createTable tableName="Stock_holding">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="stock_holding_seq">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="stock_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="stock_stock_holding" references="stock(id)"/>
+            </column>
+            <column name="portfolio_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="portfolio_stock_holding" references="portfolio(id)" />
+            </column>
+            <column name="current_share" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yg" id="create-account-table">
+        <createTable tableName="account">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="balance" type="DOUBLE PRECISION">
+                <constraints nullable="false" checkConstraint="balance >= 0" />
+            </column>
+            <column name="created" type="TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+            <column name="active" type="BOOLEAN" defaultValue="true">
+                <constraints nullable="false" />
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_account_user"  references="stock_user(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-account-transaction-table" author="your_author">
+        <createTable tableName="account_transaction">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="account_transaction_seq">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="created" type="TIMESTAMP">
+                <constraints nullable="true" />
+            </column>
+            <column name="price" type="DOUBLE PRECISION">
+                <constraints nullable="true" checkConstraint="price >= 0" />
+            </column>
+            <column name="share" type="DOUBLE PRECISION">
+                <constraints nullable="true" checkConstraint="share >= 0" />
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_account_transaction_account"
+                             references="account(id)"
+                />
+            </column>
+            <column name="stock_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_account_transaction_account"
+                             references="stock(id)"/>
+            </column>
+            <column name="before_balance" type="DOUBLE PRECISION">
+                <constraints nullable="true" checkConstraint="before_balance >= 0" />
+            </column>
+            <column name="after_balance" type="DOUBLE PRECISION">
+                <constraints nullable="true" checkConstraint="after_balance >= 0" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
