@@ -1,9 +1,7 @@
 package org.acme.service;
 
 import io.quarkus.vertx.ConsumeEvent;
-import io.vertx.core.http.WebSocketConnectOptions;
 import io.vertx.mutiny.core.Vertx;
-import io.vertx.mutiny.core.http.HttpHeaders;
 import io.vertx.mutiny.core.http.WebSocket;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -11,7 +9,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.acme.resources.StockService;
 
 public class StockServiceImpl implements StockService {
 
@@ -77,7 +75,8 @@ public class StockServiceImpl implements StockService {
 
 
     @Override
-    public double getStockPrice(String stockCode) {
-        return 0;
+    public double getStockPriceBySymbol(String Symbol) {
+        // mock stock price
+        return 20 * Math.random();
     }
 }

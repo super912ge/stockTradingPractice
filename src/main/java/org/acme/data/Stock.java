@@ -1,4 +1,4 @@
-package org.acme.model;
+package org.acme.data;
 
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;

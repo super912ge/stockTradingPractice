@@ -10,7 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import org.acme.model.Account;
+import org.acme.data.Account;
 
 @Entity
 @Table(name = "stock_user")
@@ -54,7 +54,9 @@ public class User extends PanacheEntity {
         user.name = name;
         user.persist();
     }
-
+    public static User findByUsername(String username){
+        return find("username", username).firstResult();
+    }
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("User{");
